@@ -1,7 +1,7 @@
 const todoForm = document.querySelector("#todo-form");
 const todoInput = todoForm.querySelector("input");
 const todoUl = document.querySelector("#todo-ul");
-const todoList = []
+let todoList = []
 const TODOGET = "todo"
 
 
@@ -9,10 +9,16 @@ const TODOGET = "todo"
 function submitEvent(e){
     e.preventDefault();
     const newTodo = todoInput.value;
+    let savedTodo = {
+        text:newTodo,
+        id:Date.now(),
+    };
+    console.log(typeof(savedTodo.id))
+    
     todoInput.value = "";
-    todoList.push(newTodo);
+    todoList.push(savedTodo);
     savingEvent(todoList);
-    paintTodo(newTodo);
+    paintTodo(savedTodo);
 }
 
 function paintTodo(todo){
@@ -20,7 +26,9 @@ function paintTodo(todo){
     const span = document.createElement("span");
     const button = document.createElement("button");
     button.innerText = "X";
-    span.innerText = todo;
+    span.innerText = todo.text;
+    li.id = todo.id;
+    
     li.appendChild(button);
     li.appendChild(span);
     todoUl.appendChild(li);
@@ -29,16 +37,14 @@ function paintTodo(todo){
 
 function deleteEvent(e){
     const deleteTodo = e.target.parentElement;
+    todoList = todoList.filter((item) => String(item.id) !== deleteTodo.id);
     deleteTodo.remove();
+    savingEvent(todoList);
 }
 
 function savingEvent(todo){
     localStorage.setItem(TODOGET, JSON.stringify(todo));
 }
-
-
-
-
 
 
 
